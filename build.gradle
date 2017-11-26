@@ -20,7 +20,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.flywaydb.flyway"
 
-
 group = 'poc.springboot'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -56,12 +55,11 @@ flyway {
 	baselineOnMigrate = true
 	table = '_DB_CHANGELOG'
 	encoding = 'UTF-8'
-	outOfOrder = true
+	outOfOrder = false
 
 	url = 'jdbc:postgresql://172.17.0.2:5432/db_poc_jpa_x_jdbc'
 	user = 'postgres'
 	password = 'admin1234'
-
-	String baseLocation = 'filesystem:src/main/resources/db/migration/'
-	locations = [baseLocation]
+	schemas = ['public']
+	locations = ['filesystem:src/main/resources/db/migration/public']
 }

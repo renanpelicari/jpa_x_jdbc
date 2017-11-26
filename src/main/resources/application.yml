@@ -5,7 +5,7 @@ spring:
   application:
     name: jpa_X_jdbc
   datasource:
-    url: jdbc:postgresql://172.17.0.2:5432/POC_JPA_X_JDBC
+    url: jdbc:postgresql://172.17.0.2:5432/db_poc_jpa_x_jdbc
     username: postgres
     password: admin1234
     driver-class-name: org.postgresql.Driver

@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: jpa_X_jdbc
+  datasource:
+    url: jdbc:postgresql://172.17.0.2:5432/POC_JPA_X_JDBC
+    username: postgres
+    password: admin1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      show_sql: true
+      use_sql_comments: true
+      ddl-auto: none
+
+management:
+  security:
+    enabled: false

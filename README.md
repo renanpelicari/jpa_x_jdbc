@@ -32,8 +32,14 @@ docker run --name poc_jpa_x_jdbc -e POSTGRES_PASSWORD=admin1234 -d postgres
 1. Create DB: 
 * CREATE DATABASE DB_POC_JPA_X_JDBC;
 
-2. Execute gradle in order to create versioned tables:
+2. Create Schema:
+* CREATE SCHEMA tables;
+
+3. Execute gradle in order to create changelog table:
 * gradle -i flywayMigrate
+
+4. At the first tme and every time you create a new versioned sql file:
+* gradle flywayMigrate
 
 # Lombok
 * Java Library to auto generate codes like getters and setters, toString, builder, construct with none or all arguments.

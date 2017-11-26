@@ -1,3 +1,8 @@
+info:
+  app:
+    name: POC JPA vs JDBC
+    description: POC to Show difference between JPA and JDBC
+
 server:
   port: 8080
 
@@ -11,11 +16,8 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      show_sql: true
-      use_sql_comments: true
-      ddl-auto: none
-
-management:
-  security:
-    enabled: false
+    properties:
+      hibernate:
+            show_sql: true
+            use_sql_comments: true
+            ddl-auto: none

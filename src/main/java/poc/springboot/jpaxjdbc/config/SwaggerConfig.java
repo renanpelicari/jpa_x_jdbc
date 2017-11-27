@@ -50,7 +50,7 @@ public class SwaggerConfig {
     private ApiInfo metadata() {
         return new ApiInfoBuilder()
             .title("POC - Show difference between JPA and JDBC")
-            .description("API to handle with Person Entity")
+            .description("API to handle with PersonJpa Entity")
             .version("1.0")
             .contact("renanpelicari@gmail.com")
             .build();

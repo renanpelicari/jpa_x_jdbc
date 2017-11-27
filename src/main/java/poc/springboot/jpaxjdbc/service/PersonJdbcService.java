@@ -24,7 +24,7 @@ public class PersonJdbcService {
      *
      * @param personJdbcRepository injection of {@link PersonJdbcRepository}
      */
-    public PersonJdbcService(PersonJdbcRepository personJdbcRepository) {
+    public PersonJdbcService(final PersonJdbcRepository personJdbcRepository) {
         this.personJdbcRepository = personJdbcRepository;
     }
 

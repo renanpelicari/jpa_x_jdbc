@@ -10,10 +10,7 @@ import org.springframework.stereotype.Repository;
 import poc.springboot.jpaxjdbc.model.entity.PersonJdbc;
 import poc.springboot.jpaxjdbc.model.entity.PersonJpa;
 
-import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * The JDBC Repository {@link PersonJpa} entity

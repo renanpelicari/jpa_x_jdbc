@@ -30,7 +30,7 @@ public class PersonJdbcController {
      *
      * @param personJdbcService  injection for {@link PersonJdbcService}
      */
-    public PersonJdbcController(PersonJdbcService personJdbcService) {
+    public PersonJdbcController(final PersonJdbcService personJdbcService) {
         this.personJdbcService = personJdbcService;
     }
 

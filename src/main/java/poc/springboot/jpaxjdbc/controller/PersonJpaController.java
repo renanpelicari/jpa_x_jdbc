@@ -29,7 +29,7 @@ public class PersonJpaController {
      *
      * @param personJpaService  injection for {@link PersonJpaService}
      */
-    public PersonJpaController(PersonJpaService personJpaService) {
+    public PersonJpaController(final PersonJpaService personJpaService) {
         this.personJpaService = personJpaService;
     }
 

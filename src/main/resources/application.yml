@@ -1,0 +1,23 @@
+info:
+  app:
+    name: POC JPA vs JDBC
+    description: POC to Show difference between JPA and JDBC
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: jpa_X_jdbc
+  datasource:
+    url: jdbc:postgresql://172.17.0.2:5432/db_poc_jpa_x_jdbc
+    username: postgres
+    password: admin1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+            show_sql: true
+            use_sql_comments: true
+            ddl-auto: none

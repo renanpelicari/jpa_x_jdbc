@@ -1,6 +1,8 @@
 # POC: JPA x JDBC
 POC to show difference between JPA and JDBC
 
+[![Build Status](https://travis-ci.org/renanpelicari/jpa_x_jdbc.svg?branch=master)](https://travis-ci.org/renanpelicari/jpa_x_jdbc)
+
 This project use the following technologies and frameworks:
 * Spring Boot;
 * RESTFul Web Services (to expose the endpoints);

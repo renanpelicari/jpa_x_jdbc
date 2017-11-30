@@ -1,0 +1,147 @@
+{
+	"variables": [],
+	"info": {
+		"name": "poc_jpa_x_jdbc",
+		"_postman_id": "21f0b95a-9b5e-7613-ea6f-2391cdd4aebf",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "JPA",
+			"description": "",
+			"item": [
+				{
+					"name": "jpa_find-all",
+					"request": {
+						"url": "http://localhost:8080/api/person/jpa/findAll",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "jpa_add-person",
+					"request": {
+						"url": "http://localhost:8080/api/person/jpa",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"age\": 27,\n  \"fullName\": \"Joao das Neves\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "jpa_update-person",
+					"request": {
+						"url": "http://localhost:8080/api/person/jpa/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"age\": 98,\n  \"fullName\": \"Jo Soares\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "jpa_delete-person",
+					"request": {
+						"url": "http://localhost:8080/api/person/jpa/1",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "JDBC",
+			"description": "",
+			"item": [
+				{
+					"name": "jdbc_add-person",
+					"request": {
+						"url": "http://localhost:8080/api/person/jdbc",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"age\": 77,\n  \"fullName\": \"Chapolin Colorado\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc_find-all",
+					"request": {
+						"url": "http://localhost:8080/api/person/jdbc/findAll",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc_update-person",
+					"request": {
+						"url": "http://localhost:8080/api/person/jdbc/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"age\": 1,\n  \"fullName\": \"Jo Soares\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc_delete-person",
+					"request": {
+						"url": "http://localhost:8080/api/person/jdbc/1",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

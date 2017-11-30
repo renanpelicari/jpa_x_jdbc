@@ -6,8 +6,10 @@ buildscript {
 		mavenCentral()
 		maven { url "https://repo.spring.io/snapshot" }
 		maven { url "https://repo.spring.io/milestone" }
+		maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
+		classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.2.0"
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 	}
 }
@@ -16,6 +18,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "org.flywaydb.flyway"
 
 group = 'poc.springboot'
 version = '0.0.1-SNAPSHOT'
@@ -27,14 +30,36 @@ repositories {
 	maven { url "https://repo.spring.io/milestone" }
 }
 
+configurations {
+	// in order to use jetty as embedded server
+	compile.exclude module: "spring-boot-starter-tomcat"
+}
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
+	compile('org.springframework.boot:spring-boot-starter-jetty')
 	compile('org.springframework.boot:spring-boot-starter-jersey')
 	compile('org.springframework.boot:spring-boot-starter-web')
-	runtime('org.postgresql:postgresql')
+	compile('io.springfox:springfox-swagger2:2.7.0')
+	compile('io.springfox:springfox-swagger-ui:2.7.0')
+	compile('org.postgresql:postgresql:42.1.4')
+	compile('org.flywaydb:flyway-core:4.2.0')
 	compileOnly('org.projectlombok:lombok')
+	runtime('org.postgresql:postgresql')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+flyway {
+	baselineOnMigrate = true
+	table = '_DB_CHANGELOG'
+	encoding = 'UTF-8'
+	outOfOrder = false
+
+	url = 'jdbc:postgresql://172.17.0.2:5432/db_poc_jpa_x_jdbc'
+	user = 'postgres'
+	password = 'admin1234'
+	schemas = ['public']
+	locations = ['filesystem:src/main/resources/db/migration/public']
 }

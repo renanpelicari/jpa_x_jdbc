@@ -7,6 +7,5 @@ import poc.springboot.jpaxjdbc.model.entity.PersonJpa;
 /**
  * The {@link JpaRepository} for {@link PersonJpa} entity
  */
-@Repository
 public interface PersonJpaRepository extends JpaRepository<PersonJpa, Long> {
 }

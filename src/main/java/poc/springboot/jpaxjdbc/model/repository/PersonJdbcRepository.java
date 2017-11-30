@@ -41,7 +41,7 @@ public class PersonJdbcRepository {
     /**
      * Insert PersonJpa.
      */
-    public void insertPerson(final PersonJdbc personJdbc) {
+    public void insert(final PersonJdbc personJdbc) {
         try {
             this.jdbcTemplate.update(
                 "INSERT INTO T_PERSON_JDBC (NAME, AGE) VALUES (?, ?)",
@@ -64,6 +64,39 @@ public class PersonJdbcRepository {
         } catch (final EmptyResultDataAccessException ex) {
             log.error("Empty result data.", ex);
             return null;
+        }
+    }
+
+    /**
+     * Find person by id
+     *
+     * @param personId the person id
+     * @return the optional<PersonJdbc>
+     */
+    public PersonJdbc findById(final long personId) {
+        final String sql = "SELECT ID, NAME, AGE FROM T_PERSON_JDBC WHERE ID = ?";
+        try {
+            return this.jdbcTemplate.queryForObject(sql, new Object[] { personId }, personJdbcRowMapper);
+        } catch (final EmptyResultDataAccessException ex) {
+            log.error("Empty result data.", ex);
+            return null;
+        }
+    }
+
+    /**
+     * Update Person By Id with value
+     * @param personJdbc the entity PersonJdbc
+     */
+    public void update(final PersonJdbc personJdbc) {
+        try {
+            this.jdbcTemplate.update(
+                "UPDATE T_PERSON_JDBC SET AGE = ?, NAME = ? WHERE ID = ?",
+                personJdbc.getAge(),
+                personJdbc.getFullName(),
+                personJdbc.getId());
+        } catch (final DataAccessException ex) {
+            log.error("Could not update data, ex={}", ex);
+            throw ex;
         }
     }
 }

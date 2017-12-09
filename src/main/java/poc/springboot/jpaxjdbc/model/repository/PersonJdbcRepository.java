@@ -23,10 +23,10 @@ public class PersonJdbcRepository {
 
     private static final RowMapper<PersonJdbc> personJdbcRowMapper = (rs, rowNum) ->
         PersonJdbc.builder()
-        .id(rs.getLong("id"))
-        .fullName(rs.getString("name"))
-        .age(rs.getInt("age"))
-        .build();
+            .id(rs.getLong("id"))
+            .fullName(rs.getString("name"))
+            .age(rs.getInt("age"))
+            .build();
 
     /**
      * Instantiates a new PersonJpa JDBC repository.
@@ -36,21 +36,6 @@ public class PersonJdbcRepository {
     @Autowired
     public PersonJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    /**
-     * Insert PersonJpa.
-     */
-    public void insert(final PersonJdbc personJdbc) {
-        try {
-            this.jdbcTemplate.update(
-                "INSERT INTO T_PERSON_JDBC (NAME, AGE) VALUES (?, ?)",
-                personJdbc.getFullName(),
-                personJdbc.getAge());
-        } catch (final DataAccessException ex) {
-            log.error("Could not insert Person.", ex);
-            throw ex;
-        }
     }
 
     /**
@@ -76,7 +61,7 @@ public class PersonJdbcRepository {
     public PersonJdbc findById(final long personId) {
         final String sql = "SELECT ID, NAME, AGE FROM T_PERSON_JDBC WHERE ID = ?";
         try {
-            return this.jdbcTemplate.queryForObject(sql, new Object[] { personId }, personJdbcRowMapper);
+            return this.jdbcTemplate.queryForObject(sql, new Object[]{personId}, personJdbcRowMapper);
         } catch (final EmptyResultDataAccessException ex) {
             log.error("Empty result data.", ex);
             return null;
@@ -84,7 +69,25 @@ public class PersonJdbcRepository {
     }
 
     /**
+     * Insert new PersonJdbc.
+     *
+     * @param personJdbc a new {@link PersonJdbc} entity
+     */
+    public void insert(final PersonJdbc personJdbc) {
+        try {
+            this.jdbcTemplate.update(
+                "INSERT INTO T_PERSON_JDBC (NAME, AGE) VALUES (?, ?)",
+                personJdbc.getFullName(),
+                personJdbc.getAge());
+        } catch (final DataAccessException ex) {
+            log.error("Could not insert Person.", ex);
+            throw ex;
+        }
+    }
+
+    /**
      * Update Person By Id with value
+     *
      * @param personJdbc the entity PersonJdbc
      */
     public void update(final PersonJdbc personJdbc) {

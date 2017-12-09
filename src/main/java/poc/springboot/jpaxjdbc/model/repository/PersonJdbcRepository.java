@@ -102,4 +102,18 @@ public class PersonJdbcRepository {
             throw ex;
         }
     }
+
+    /**
+     * Delete Person By Id with value
+     *
+     * @param id the person id
+     */
+    public void deleteById(final Long id) {
+        try {
+            this.jdbcTemplate.update("DELETE T_PERSON_JDBC WHERE ID = ?", id);
+        } catch (final DataAccessException ex) {
+            log.error("Could not delete by id, ex={}", ex);
+            throw ex;
+        }
+    }
 }

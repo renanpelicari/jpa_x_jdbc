@@ -2,6 +2,8 @@
 POC to show difference between JPA and JDBC
 
 [![Build Status](https://travis-ci.org/renanpelicari/jpa_x_jdbc.svg?branch=master)](https://travis-ci.org/renanpelicari/jpa_x_jdbc)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8fa8f8f14f1c1e0c6d74/maintainability)](https://codeclimate.com/github/renanpelicari/jpa_x_jdbc/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/8fa8f8f14f1c1e0c6d74/test_coverage)](https://codeclimate.com/github/renanpelicari/jpa_x_jdbc/test_coverage)
 
 This project use the following technologies and frameworks:
 * [Spring Boot](https://projects.spring.io/spring-boot/);

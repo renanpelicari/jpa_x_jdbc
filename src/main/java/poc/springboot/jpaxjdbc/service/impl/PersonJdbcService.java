@@ -1,7 +1,9 @@
 package poc.springboot.jpaxjdbc.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import poc.springboot.jpaxjdbc.adapter.PersonJdbcAdapter;
 import poc.springboot.jpaxjdbc.model.entity.PersonJdbc;
 import poc.springboot.jpaxjdbc.model.repository.PersonJdbcRepository;
@@ -19,7 +21,7 @@ import java.util.Optional;
 @Service
 public class PersonJdbcService implements PersonService {
 
-    private PersonJdbcRepository personJdbcRepository;
+    private final PersonJdbcRepository personJdbcRepository;
 
     /**
      * Instantiates a new PersonJpa jpa service.
@@ -34,6 +36,7 @@ public class PersonJdbcService implements PersonService {
      * @see PersonService#register(PersonRequestVo)
      */
     @Override
+    @Transactional
     public void register(final PersonRequestVo personRequestVo) {
         log.debug("BEGIN register personRequestVo={}", personRequestVo);
         personJdbcRepository.insert(PersonJdbcAdapter.voToModelJdbc(personRequestVo));
@@ -44,6 +47,7 @@ public class PersonJdbcService implements PersonService {
      * @see PersonService#update(long, PersonRequestVo)
      */
     @Override
+    @Transactional
     public void update(final long id, final PersonRequestVo personRequestVo) {
         log.debug("BEGIN update personRequestVo={}", personRequestVo);
         final PersonJdbc personJdbc = personJdbcRepository.findById(id);
@@ -59,6 +63,7 @@ public class PersonJdbcService implements PersonService {
      * @see PersonService#findAll()
      */
     @Override
+    @Transactional(readOnly = true)
     public List<PersonResponseVo> findAll() {
         log.debug("BEGIN findAll");
         final List<PersonResponseVo> response = PersonJdbcAdapter.jdbcModelToVos(personJdbcRepository.findAll());
@@ -70,7 +75,15 @@ public class PersonJdbcService implements PersonService {
      * @see PersonService#delete(long)
      */
     @Override
+    @Transactional
     public void delete(final long id) {
-
+        log.debug("BEGIN delete id={}", id);
+        try {
+            personJdbcRepository.deleteById(id);
+        } catch (final DataAccessException ex) {
+            log.error("Could not found delete ID, ex={}", ex.getCause());
+            throw ex;
+        }
+        log.debug("END delete.");
     }
 }

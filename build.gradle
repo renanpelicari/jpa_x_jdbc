@@ -1,65 +1,77 @@
 buildscript {
-	ext {
-		springBootVersion = '2.0.0.M6'
-	}
-	repositories {
-		mavenCentral()
-		maven { url "https://repo.spring.io/snapshot" }
-		maven { url "https://repo.spring.io/milestone" }
-		maven { url "https://plugins.gradle.org/m2/" }
-	}
-	dependencies {
-		classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.2.0"
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '2.0.0.M6'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "http://repo1.maven.org/maven2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.2.0"
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: "org.flywaydb.flyway"
+apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'jacoco'
 
 group = 'poc.springboot'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
-	maven { url "https://repo.spring.io/snapshot" }
-	maven { url "https://repo.spring.io/milestone" }
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "http://repo1.maven.org/maven2/" }
 }
 
 configurations {
-	// in order to use jetty as embedded server
-	compile.exclude module: "spring-boot-starter-tomcat"
+    // in order to use jetty as embedded server
+    compile.exclude module: "spring-boot-starter-tomcat"
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-jdbc')
-	compile('org.springframework.boot:spring-boot-starter-jetty')
-	compile('org.springframework.boot:spring-boot-starter-jersey')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('io.springfox:springfox-swagger2:2.7.0')
-	compile('io.springfox:springfox-swagger-ui:2.7.0')
-	compile('org.postgresql:postgresql:42.1.4')
-	compile('org.flywaydb:flyway-core:4.2.0')
-	compileOnly('org.projectlombok:lombok')
-	runtime('org.postgresql:postgresql')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+    compile('org.springframework.boot:spring-boot-starter-jetty')
+    compile('org.springframework.boot:spring-boot-starter-jersey')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('io.springfox:springfox-swagger2:2.7.0')
+    compile('io.springfox:springfox-swagger-ui:2.7.0')
+    compile('org.postgresql:postgresql:42.1.4')
+    compile('org.flywaydb:flyway-core:4.2.0')
+    compileOnly('org.projectlombok:lombok')
+    compile('org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2')
+    runtime('org.postgresql:postgresql')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 flyway {
-	baselineOnMigrate = true
-	table = '_DB_CHANGELOG'
-	encoding = 'UTF-8'
-	outOfOrder = false
+    baselineOnMigrate = true
+    table = '_DB_CHANGELOG'
+    encoding = 'UTF-8'
+    outOfOrder = false
 
-	url = 'jdbc:postgresql://172.17.0.2:5432/db_poc_jpa_x_jdbc'
-	user = 'postgres'
-	password = 'admin1234'
-	schemas = ['public']
-	locations = ['filesystem:src/main/resources/db/migration/public']
+    url = 'jdbc:postgresql://172.17.0.2:5432/db_poc_jpa_x_jdbc'
+    user = 'postgres'
+    password = 'admin1234'
+    schemas = ['public']
+    locations = ['filesystem:src/main/resources/db/migration/public']
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
 }

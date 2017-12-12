@@ -2,8 +2,8 @@
 POC to show difference between JPA and JDBC
 
 [![Build Status](https://travis-ci.org/renanpelicari/jpa_x_jdbc.svg?branch=master)](https://travis-ci.org/renanpelicari/jpa_x_jdbc)
-[![Maintainability](https://api.codeclimate.com/v1/badges/8fa8f8f14f1c1e0c6d74/maintainability)](https://codeclimate.com/github/renanpelicari/jpa_x_jdbc/maintainability)
 [![Coverage Status](https://coveralls.io/repos/github/renanpelicari/jpa_x_jdbc/badge.svg?branch=master)](https://coveralls.io/github/renanpelicari/jpa_x_jdbc?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/8fa8f8f14f1c1e0c6d74/maintainability)](https://codeclimate.com/github/renanpelicari/jpa_x_jdbc/maintainability)
 
 This project use the following technologies and frameworks:
 * [Gradlew](https://docs.gradle.org/current/userguide/gradle_wrapper.html) (build automation - wrapper version);

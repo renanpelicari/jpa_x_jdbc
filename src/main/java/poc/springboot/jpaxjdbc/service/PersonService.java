@@ -27,12 +27,12 @@ public interface PersonService {
      *
      * @return the list of Person
      */
-    public List<PersonResponseVo> findAll();
+    List<PersonResponseVo> findAll();
 
     /**
      * Delete person based on ID.
      *
      * @param id the person id
      */
-    public void delete(final long id);
+    void delete(final long id);
 }

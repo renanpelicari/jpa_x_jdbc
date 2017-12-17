@@ -28,7 +28,7 @@ public class PersonJpaController implements PersonController {
     /**
      * Instantiates a new PersonJpa jpa controller.
      *
-     * @param personJpaService  injection for {@link PersonJpaService}
+     * @param personJpaService injection for {@link PersonJpaService}
      */
     public PersonJpaController(final PersonJpaService personJpaService) {
         this.personJpaService = personJpaService;
@@ -41,7 +41,7 @@ public class PersonJpaController implements PersonController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Register new person using JPA", nickname = "register")
     public void register(@ApiParam(name = "PersonRequest", value = "Create PersonJpa Request Body")
-                             @RequestBody @Valid final PersonRequestVo requestVo) {
+                         @RequestBody @Valid final PersonRequestVo requestVo) {
         log.debug("BEGIN register personJpa, requestVo={}", requestVo);
         personJpaService.register(requestVo);
         log.debug("END register personJpa.");

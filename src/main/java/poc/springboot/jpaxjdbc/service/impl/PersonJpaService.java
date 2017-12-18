@@ -40,7 +40,7 @@ public class PersonJpaService implements PersonService {
     public void register(final PersonRequestVo personRequestVo) {
         Assert.notNull(personRequestVo, "PersonRequestVo cannot be null!");
         log.debug("BEGIN register personRequestVo={}", personRequestVo);
-        personJpaRepository.save(PersonJpaAdapter.voToModelJpa(personRequestVo));
+        personJpaRepository.saveAndFlush(PersonJpaAdapter.voToModelJpa(personRequestVo));
         log.debug("END register.");
     }
 
@@ -53,7 +53,7 @@ public class PersonJpaService implements PersonService {
         Assert.notNull(personRequestVo, "PersonRequestVo cannot be null!");
         log.debug("BEGIN register personRequestVo={}", personRequestVo);
         final PersonJpa personJpa = personJpaRepository.findById(id).orElse(new PersonJpa());
-        personJpaRepository.save(PersonJpaAdapter.updatePersonJpa(personJpa, personRequestVo));
+        personJpaRepository.saveAndFlush(PersonJpaAdapter.updatePersonJpa(personJpa, personRequestVo));
         log.debug("END register.");
     }
 

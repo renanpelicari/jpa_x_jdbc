@@ -11,8 +11,8 @@ import java.util.stream.IntStream;
  */
 public class PersonJpaFixture {
 
-    private static PersonJpa getPersonJpa(final int size) {
-        return PersonJpa.builder().id((long) size).age(20 + size).fullName("Mocked User " + size).build();
+    public static PersonJpa getPersonJpa(final int id) {
+        return PersonJpa.builder().id((long) id).age(20 + id).fullName("Mocked User " + id).build();
     }
 
     public static List<PersonJpa> getPersonJpaList(final int size) {

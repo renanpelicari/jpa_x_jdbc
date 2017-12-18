@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -41,7 +42,9 @@ public class SwaggerConfig {
             .title("POC - Show difference between JPA and JDBC")
             .description("API to handle with PersonJpa Entity")
             .version("1.0")
-            .contact("renanpelicari@gmail.com")
+            .contact(new Contact("Renan Peliçari Rodrigues",
+                "https://github.com/renanpelicari",
+                "renanpelicari@gmail.com"))
             .build();
     }
 }

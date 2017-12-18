@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import poc.springboot.jpaxjdbc.adapter.PersonJdbcAdapter;
 import poc.springboot.jpaxjdbc.model.entity.PersonJdbc;
 import poc.springboot.jpaxjdbc.model.repository.PersonJdbcRepository;
@@ -38,6 +39,7 @@ public class PersonJdbcService implements PersonService {
     @Override
     @Transactional
     public void register(final PersonRequestVo personRequestVo) {
+        Assert.notNull(personRequestVo, "PersonRequestVo cannot be null!");
         log.debug("BEGIN register personRequestVo={}", personRequestVo);
         personJdbcRepository.insert(PersonJdbcAdapter.voToModelJdbc(personRequestVo));
         log.debug("END register.");
@@ -49,12 +51,13 @@ public class PersonJdbcService implements PersonService {
     @Override
     @Transactional
     public void update(final long id, final PersonRequestVo personRequestVo) {
+        Assert.notNull(personRequestVo, "PersonRequestVo cannot be null!");
         log.debug("BEGIN update personRequestVo={}", personRequestVo);
         final PersonJdbc personJdbc = personJdbcRepository.findById(id);
         if (Optional.ofNullable(personJdbc).isPresent()) {
             personJdbcRepository.update(PersonJdbcAdapter.updatePersonJdbc(personJdbc, personRequestVo));
         } else {
-            personJdbcRepository.insert(PersonJdbcAdapter.updatePersonJdbc(personJdbc, personRequestVo));
+            personJdbcRepository.insert(PersonJdbcAdapter.updatePersonJdbc(new PersonJdbc(), personRequestVo));
         }
         log.debug("END update.");
     }

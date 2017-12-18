@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import poc.springboot.jpaxjdbc.fixtures.vo.request.PersonRequestVoFixture;
 import poc.springboot.jpaxjdbc.fixtures.vo.response.PersonResponseVoFixture;
-import poc.springboot.jpaxjdbc.service.impl.PersonJpaService;
+import poc.springboot.jpaxjdbc.service.impl.PersonJdbcService;
 import poc.springboot.jpaxjdbc.vo.request.PersonRequestVo;
 import poc.springboot.jpaxjdbc.vo.response.PersonResponseVo;
 
@@ -28,11 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Rest Controller Tests for {@link PersonJpaController}
+ * Rest Controller Tests for {@link PersonJdbcController}
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = PersonJpaController.class, secure = false)
-public class PersonJpaControllerTest {
+@WebMvcTest(value = PersonJdbcController.class, secure = false)
+public class PersonJdbcControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -41,9 +41,9 @@ public class PersonJpaControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private PersonJpaService personJpaService;
+    private PersonJdbcService personJdbcService;
 
-    private final String ENDPOINT_URL = "/api/person/jpa";
+    private final String ENDPOINT_URL = "/api/person/jdbc";
 
     private PersonRequestVo personRequestVo;
 
@@ -62,7 +62,7 @@ public class PersonJpaControllerTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().bytes(new byte[0]));
-        verify(personJpaService).register(personRequestVo);
+        verify(personJdbcService).register(personRequestVo);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(PersonRequestVo.builder().fullName("Renan Rodrigues").build()))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        verify(personJpaService, never()).register(any());
+        verify(personJdbcService, never()).register(any());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(PersonRequestVo.builder().age(87).build()))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        verify(personJpaService, never()).register(any());
+        verify(personJdbcService, never()).register(any());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(personRequestVo))
             .accept(MediaType.APPLICATION_XML_VALUE))
             .andExpect(status().isNotAcceptable());
-        verify(personJpaService, never()).register(any());
+        verify(personJdbcService, never()).register(any());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(personRequestVo))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed());
-        verify(personJpaService, never()).register(any());
+        verify(personJdbcService, never()).register(any());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(personRequestVo))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed());
-        verify(personJpaService, never()).register(any());
+        verify(personJdbcService, never()).register(any());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(personRequestVo))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed());
-        verify(personJpaService, never()).register(any());
+        verify(personJdbcService, never()).register(any());
     }
 
     @Test
@@ -133,8 +133,8 @@ public class PersonJpaControllerTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().bytes(new byte[0]));
-        verify(personJpaService, never()).register(personRequestVo);
-        verify(personJpaService).update(PERSON_ID, personRequestVo);
+        verify(personJdbcService, never()).register(personRequestVo);
+        verify(personJdbcService).update(PERSON_ID, personRequestVo);
     }
 
     @Test
@@ -144,8 +144,8 @@ public class PersonJpaControllerTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().bytes(new byte[0]));
-        verify(personJpaService, never()).register(personRequestVo);
-        verify(personJpaService, never()).update(PERSON_ID, personRequestVo);
+        verify(personJdbcService, never()).register(personRequestVo);
+        verify(personJdbcService, never()).update(PERSON_ID, personRequestVo);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(PersonRequestVo.builder().fullName("Renan Rodrigues").build()))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        verify(personJpaService, never()).update(PERSON_ID, personRequestVo);
+        verify(personJdbcService, never()).update(PERSON_ID, personRequestVo);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(PersonRequestVo.builder().age(87).build()))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        verify(personJpaService, never()).update(PERSON_ID, personRequestVo);
+        verify(personJdbcService, never()).update(PERSON_ID, personRequestVo);
     }
 
     @Test
@@ -175,7 +175,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(personRequestVo))
             .accept(MediaType.APPLICATION_XML_VALUE))
             .andExpect(status().isNotAcceptable());
-        verify(personJpaService, never()).update(PERSON_ID, personRequestVo);
+        verify(personJdbcService, never()).update(PERSON_ID, personRequestVo);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(personRequestVo))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed());
-        verify(personJpaService, never()).update(PERSON_ID, personRequestVo);
+        verify(personJdbcService, never()).update(PERSON_ID, personRequestVo);
     }
 
     @Test
@@ -195,19 +195,19 @@ public class PersonJpaControllerTest {
             .content(mapper.writeValueAsString(personRequestVo))
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed());
-        verify(personJpaService, never()).update(PERSON_ID, personRequestVo);
+        verify(personJdbcService, never()).update(PERSON_ID, personRequestVo);
     }
 
     @Test
     public void testFindAllSuccess() throws Exception {
         final List<PersonResponseVo> responseVo = PersonResponseVoFixture.getPersonResponseVos(5);
-        given(personJpaService.findAll()).willReturn(responseVo);
+        given(personJdbcService.findAll()).willReturn(responseVo);
 
         mvc.perform(get(ENDPOINT_URL + "/findAll")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().json(mapper.writeValueAsString(responseVo)));
-        verify(personJpaService).findAll();
+        verify(personJdbcService).findAll();
     }
 
     @Test
@@ -215,7 +215,7 @@ public class PersonJpaControllerTest {
         mvc.perform(get(ENDPOINT_URL + "/findAll")
             .accept(MediaType.APPLICATION_XML_VALUE))
             .andExpect(status().isNotAcceptable());
-        verify(personJpaService, never()).findAll();
+        verify(personJdbcService, never()).findAll();
     }
 
     @Test
@@ -223,7 +223,7 @@ public class PersonJpaControllerTest {
         mvc.perform(put(ENDPOINT_URL + "/findAll")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnsupportedMediaType());
-        verify(personJpaService, never()).findAll();
+        verify(personJdbcService, never()).findAll();
     }
 
     @Test
@@ -231,7 +231,7 @@ public class PersonJpaControllerTest {
         mvc.perform(post(ENDPOINT_URL + "/findAll")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed());
-        verify(personJpaService, never()).findAll();
+        verify(personJdbcService, never()).findAll();
     }
 
     @Test
@@ -239,7 +239,7 @@ public class PersonJpaControllerTest {
         mvc.perform(delete(ENDPOINT_URL + "/findAll")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        verify(personJpaService, never()).findAll();
+        verify(personJdbcService, never()).findAll();
     }
 
     @Test
@@ -249,9 +249,9 @@ public class PersonJpaControllerTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().bytes(new byte[0]));
-        verify(personJpaService, never()).register(any());
-        verify(personJpaService, never()).update(anyInt(), any());
-        verify(personJpaService).delete(PERSON_ID);
+        verify(personJdbcService, never()).register(any());
+        verify(personJdbcService, never()).update(anyInt(), any());
+        verify(personJdbcService).delete(PERSON_ID);
     }
 
     @Test
@@ -261,9 +261,9 @@ public class PersonJpaControllerTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed())
             .andExpect(content().bytes(new byte[0]));
-        verify(personJpaService, never()).register(any());
-        verify(personJpaService, never()).update(anyInt(), any());
-        verify(personJpaService, never()).delete(PERSON_ID);
+        verify(personJdbcService, never()).register(any());
+        verify(personJdbcService, never()).update(anyInt(), any());
+        verify(personJdbcService, never()).delete(PERSON_ID);
     }
 
     @Test
@@ -273,9 +273,9 @@ public class PersonJpaControllerTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isMethodNotAllowed())
             .andExpect(content().bytes(new byte[0]));
-        verify(personJpaService, never()).register(any());
-        verify(personJpaService, never()).update(anyInt(), any());
-        verify(personJpaService, never()).delete(PERSON_ID);
+        verify(personJdbcService, never()).register(any());
+        verify(personJdbcService, never()).update(anyInt(), any());
+        verify(personJdbcService, never()).delete(PERSON_ID);
     }
 
 }

@@ -113,6 +113,6 @@ public class PersonJdbcRepository {
             final String errorMessage = "Could not delete person because id={" + id + "} was not found.";
             throw new EmptyResultDataAccessException(errorMessage, 1);
         }
-        this.jdbcTemplate.update("DELETE T_PERSON_JDBC WHERE ID = ?", id);
+        this.jdbcTemplate.update("DELETE FROM T_PERSON_JDBC WHERE ID = ?", id);
     }
 }

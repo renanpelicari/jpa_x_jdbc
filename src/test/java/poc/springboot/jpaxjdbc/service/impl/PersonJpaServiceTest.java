@@ -7,7 +7,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import poc.springboot.jpaxjdbc.fixtures.model.entity.PersonJpaFixture;
 import poc.springboot.jpaxjdbc.fixtures.vo.request.PersonRequestVoFixture;
 import poc.springboot.jpaxjdbc.model.entity.PersonJpa;
@@ -45,7 +45,7 @@ public class PersonJpaServiceTest {
         final PersonRequestVo requestVo = PersonRequestVoFixture.getPersonRequestVo();
 
         personJpaService.register(requestVo);
-        verify(personJpaRepository).save(personJpaCaptor.capture());
+        verify(personJpaRepository).saveAndFlush(personJpaCaptor.capture());
 
         final PersonJpa personJpa = personJpaCaptor.getValue();
 
@@ -77,7 +77,7 @@ public class PersonJpaServiceTest {
         given(personJpaRepository.findById(id)).willReturn(mockedPersonJpa);
 
         personJpaService.update(id, requestVo);
-        verify(personJpaRepository).save(personJpaCaptor.capture());
+        verify(personJpaRepository).saveAndFlush(personJpaCaptor.capture());
 
         final PersonJpa savedPersonJpa = personJpaCaptor.getValue();
         assertNotNull(savedPersonJpa);
@@ -92,7 +92,7 @@ public class PersonJpaServiceTest {
         final long id = 1;
 
         personJpaService.update(id, requestVo);
-        verify(personJpaRepository).save(personJpaCaptor.capture());
+        verify(personJpaRepository).saveAndFlush(personJpaCaptor.capture());
 
         final PersonJpa savedPersonJpa = personJpaCaptor.getValue();
         assertNotNull(savedPersonJpa);
@@ -143,20 +143,18 @@ public class PersonJpaServiceTest {
         verify(personJpaRepository).deleteById(id);
     }
 
-    @Test(expected = DataAccessException.class)
+    @Test(expected = EmptyResultDataAccessException.class)
     public void testDeleteDataAccessException() throws Exception {
         final String mockedException = "Could not found delete ID, ex={Mocked Exception}";
-        doThrow(new DataAccessException(mockedException) {
-        }).when(personJpaRepository).deleteById(anyLong());
+        doThrow(new EmptyResultDataAccessException(mockedException, 1)).when(personJpaRepository).deleteById(anyLong());
         final long id = 7;
         try {
             personJpaService.delete(id);
-        } catch (final DataAccessException ex) {
+        } catch (final EmptyResultDataAccessException ex) {
             verify(personJpaRepository).deleteById(id);
             assertEquals(ex.getMessage(), mockedException);
             throw ex;
         }
         fail("Should throw an DataAccessException!");
     }
-
 }

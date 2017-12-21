@@ -78,16 +78,20 @@ public class PerformanceComparatorService {
         return response;
     }
 
+    private long getElapsedTime(final Instant startTime, final String additionalLogInfo) {
+        final long elapsedTime = Duration.between(startTime, Instant.now()).toMillis();
+        log.info(additionalLogInfo + " | Start={} | Duration={}", startTime, elapsedTime);
+        return elapsedTime;
+    }
+
     private PerformanceComparatorResponseVo getCreateMethodResult() {
         final Instant jpaStart = Instant.now();
         setMassivePersonJpa();
-        final long jpaElapsedTime = Duration.between(jpaStart, Instant.now()).toMillis();
-        log.info("Create JPA | Start={} | Duration={}", jpaStart, jpaElapsedTime);
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Create JPA");
 
         final Instant jdbcStart = Instant.now();
         setMassivePersonJdbc();
-        final long jdbcElapsedTime = Duration.between(jdbcStart, Instant.now()).toMillis();
-        log.info("Create JDBC | Start={} | Duration={}", jdbcStart, jdbcElapsedTime);
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Create JDBC");
 
         return PerformanceComparatorResponseVo.builder()
             .jpaElapsedTimeInMillis(jpaElapsedTime)
@@ -99,13 +103,11 @@ public class PerformanceComparatorService {
     private PerformanceComparatorResponseVo getReadMethodResult() {
         final Instant jpaStart = Instant.now();
         personJpaService.findAll();
-        final long jpaElapsedTime = Duration.between(jpaStart, Instant.now()).toMillis();
-        log.info("Read JPA | Start={} | Duration={}", jpaStart, jpaElapsedTime);
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Read JPA");
 
         final Instant jdbcStart = Instant.now();
         personJdbcService.findAll();
-        final long jdbcElapsedTime = Duration.between(jdbcStart, Instant.now()).toMillis();
-        log.info("Read JDBC | Start={} | Duration={}", jdbcStart, jdbcElapsedTime);
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Read JDBC");
 
         return PerformanceComparatorResponseVo.builder()
             .jpaElapsedTimeInMillis(jpaElapsedTime)
@@ -117,13 +119,11 @@ public class PerformanceComparatorService {
     private PerformanceComparatorResponseVo getUpdateMethodResult(final List<Long> jpaIds, final List<Long> jdbcIds) {
         final Instant jpaStart = Instant.now();
         updateMassivePersonJpa(jpaIds);
-        final long jpaElapsedTime = Duration.between(jpaStart, Instant.now()).toMillis();
-        log.info("Updae JPA | Start={} | Duration={}", jpaStart, jpaElapsedTime);
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Update JPA");
 
         final Instant jdbcStart = Instant.now();
         updateMassivePersonJdbc(jdbcIds);
-        final long jdbcElapsedTime = Duration.between(jdbcStart, Instant.now()).toMillis();
-        log.info("Update JDBC | Start={} | Duration={}", jdbcStart, jdbcElapsedTime);
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Update JDBC");
 
         return PerformanceComparatorResponseVo.builder()
             .jpaElapsedTimeInMillis(jpaElapsedTime)
@@ -135,13 +135,11 @@ public class PerformanceComparatorService {
     private PerformanceComparatorResponseVo getDeleteMethodResult(final List<Long> jpaIds, final List<Long> jdbcIds) {
         final Instant jpaStart = Instant.now();
         jpaIds.forEach(personJpaService::delete);
-        final long jpaElapsedTime = Duration.between(jpaStart, Instant.now()).toMillis();
-        log.info("Delete JPA | Start={} | Duration={}", jpaStart, jpaElapsedTime);
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Delete JPA");
 
         final Instant jdbcStart = Instant.now();
         jdbcIds.forEach(personJdbcService::delete);
-        final long jdbcElapsedTime = Duration.between(jdbcStart, Instant.now()).toMillis();
-        log.info("Delete JDBC | Start={} | Duration={}", jdbcStart, jdbcElapsedTime);
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Delete JDBC");
 
         return PerformanceComparatorResponseVo.builder()
             .jpaElapsedTimeInMillis(jpaElapsedTime)

@@ -1,0 +1,183 @@
+package poc.springboot.jpaxjdbc.service;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import poc.springboot.jpaxjdbc.controller.enums.CrudMethod;
+import poc.springboot.jpaxjdbc.service.impl.PersonJdbcService;
+import poc.springboot.jpaxjdbc.service.impl.PersonJpaService;
+import poc.springboot.jpaxjdbc.vo.request.PersonRequestVo;
+import poc.springboot.jpaxjdbc.vo.response.PerformanceComparatorResponseVo;
+import poc.springboot.jpaxjdbc.vo.response.PersonResponseVo;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+
+/**
+ * The Performance Comparator service.
+ */
+@Slf4j
+@Service
+public class PerformanceComparatorService {
+
+    private final PersonJpaService personJpaService;
+
+    private final PersonJdbcService personJdbcService;
+
+    private static final String MOCKED_NAME = "Massive Person ";
+
+    @Getter
+    @Setter
+    private long maxRecords = 1000;
+
+    /**
+     * Instantiates a new Performance comparator service.
+     *
+     * @param personJpaService  the {@link PersonJpaService} injection
+     * @param personJdbcService the {@link PersonJdbcService} injection
+     */
+    public PerformanceComparatorService(final PersonJpaService personJpaService,
+                                        final PersonJdbcService personJdbcService) {
+        this.personJpaService = personJpaService;
+        this.personJdbcService = personJdbcService;
+    }
+
+    /**
+     * Performance comparator - Read Method
+     *
+     * @param quantity of elements will be create, update and delete
+     * @return the {@link PerformanceComparatorResponseVo}
+     */
+    @Transactional
+    public List<PerformanceComparatorResponseVo> compare(final long quantity) {
+        log.debug("BEGIN compare.");
+        setMaxRecords(quantity);
+
+        final List<PersonResponseVo> responseJpa = personJpaService.findAll();
+        final List<Long> jpaIds = getIds(responseJpa);
+
+        final List<PersonResponseVo> responseJdbc = personJdbcService.findAll();
+        final List<Long> jdbcIds = getIds(responseJdbc);
+
+        final PerformanceComparatorResponseVo createMethodResult = getCreateMethodResult();
+        final PerformanceComparatorResponseVo readMethodResult = getReadMethodResult();
+        final PerformanceComparatorResponseVo updateMethodResult = getUpdateMethodResult(jpaIds, jdbcIds);
+        final PerformanceComparatorResponseVo deleteMethodResult = getDeleteMethodResult(jpaIds, jdbcIds);
+
+        final List<PerformanceComparatorResponseVo> response = Arrays.asList(createMethodResult, readMethodResult,
+            updateMethodResult, deleteMethodResult);
+
+        log.debug("END compare, response={}.", response);
+        return response;
+    }
+
+    private long getElapsedTime(final Instant startTime, final String additionalLogInfo) {
+        final long elapsedTime = Duration.between(startTime, Instant.now()).toMillis();
+        log.info(additionalLogInfo + " | Start={} | Duration={}", startTime, elapsedTime);
+        return elapsedTime;
+    }
+
+    private PerformanceComparatorResponseVo getCreateMethodResult() {
+        final Instant jpaStart = Instant.now();
+        setMassivePersonJpa();
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Create JPA");
+
+        final Instant jdbcStart = Instant.now();
+        setMassivePersonJdbc();
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Create JDBC");
+
+        return PerformanceComparatorResponseVo.builder()
+            .jpaElapsedTimeInMillis(jpaElapsedTime)
+            .jdbcElapsedTimeInMillis(jdbcElapsedTime)
+            .method(CrudMethod.CREATE)
+            .build();
+    }
+
+    private PerformanceComparatorResponseVo getReadMethodResult() {
+        final Instant jpaStart = Instant.now();
+        personJpaService.findAll();
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Read JPA");
+
+        final Instant jdbcStart = Instant.now();
+        personJdbcService.findAll();
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Read JDBC");
+
+        return PerformanceComparatorResponseVo.builder()
+            .jpaElapsedTimeInMillis(jpaElapsedTime)
+            .jdbcElapsedTimeInMillis(jdbcElapsedTime)
+            .method(CrudMethod.READ)
+            .build();
+    }
+
+    private PerformanceComparatorResponseVo getUpdateMethodResult(final List<Long> jpaIds, final List<Long> jdbcIds) {
+        final Instant jpaStart = Instant.now();
+        updateMassivePersonJpa(jpaIds);
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Update JPA");
+
+        final Instant jdbcStart = Instant.now();
+        updateMassivePersonJdbc(jdbcIds);
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Update JDBC");
+
+        return PerformanceComparatorResponseVo.builder()
+            .jpaElapsedTimeInMillis(jpaElapsedTime)
+            .jdbcElapsedTimeInMillis(jdbcElapsedTime)
+            .method(CrudMethod.UPDATE)
+            .build();
+    }
+
+    private PerformanceComparatorResponseVo getDeleteMethodResult(final List<Long> jpaIds, final List<Long> jdbcIds) {
+        final Instant jpaStart = Instant.now();
+        jpaIds.forEach(personJpaService::delete);
+        final long jpaElapsedTime = getElapsedTime(jpaStart, "Delete JPA");
+
+        final Instant jdbcStart = Instant.now();
+        jdbcIds.forEach(personJdbcService::delete);
+        final long jdbcElapsedTime = getElapsedTime(jdbcStart, "Delete JDBC");
+
+        return PerformanceComparatorResponseVo.builder()
+            .jpaElapsedTimeInMillis(jpaElapsedTime)
+            .jdbcElapsedTimeInMillis(jdbcElapsedTime)
+            .method(CrudMethod.DELETE)
+            .build();
+    }
+
+    private List<Long> getIds(final List<PersonResponseVo> personList) {
+        return personList.stream().filter(person -> person.getFullName().startsWith(MOCKED_NAME))
+            .map(PersonResponseVo::getId).collect(Collectors.toList());
+    }
+
+    private void setMassivePersonJpa() {
+        LongStream.range(0, getMaxRecords()).forEach(counter ->
+            personJpaService.register(PersonRequestVo.builder()
+                .fullName(MOCKED_NAME + counter)
+                .age(RandomUtils.nextInt(99))
+                .build())
+        );
+    }
+
+    private void setMassivePersonJdbc() {
+        LongStream.range(0, getMaxRecords()).forEach(counter ->
+            personJdbcService.register(PersonRequestVo.builder()
+                .fullName(MOCKED_NAME + counter)
+                .age(RandomUtils.nextInt(99))
+                .build())
+        );
+    }
+
+    private void updateMassivePersonJpa(final List<Long> ids) {
+        ids.forEach(id -> personJpaService.update(id,
+            PersonRequestVo.builder().fullName(MOCKED_NAME + "Changed " + id).age(RandomUtils.nextInt(99)).build()));
+    }
+
+    private void updateMassivePersonJdbc(final List<Long> ids) {
+        ids.forEach(id -> personJdbcService.update(id,
+            PersonRequestVo.builder().fullName(MOCKED_NAME + "Changed " + id).age(RandomUtils.nextInt(99)).build()));
+    }
+}

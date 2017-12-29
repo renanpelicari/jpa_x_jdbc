@@ -2,7 +2,6 @@
 POC to show difference between JPA and JDBC
 
 [![Build Status](https://travis-ci.org/renanpelicari/jpa_x_jdbc.svg?branch=master)](https://travis-ci.org/renanpelicari/jpa_x_jdbc)
-[![Coverage Status](https://coveralls.io/repos/github/renanpelicari/jpa_x_jdbc/badge.svg?branch=master)](https://coveralls.io/github/renanpelicari/jpa_x_jdbc?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/8fa8f8f14f1c1e0c6d74/maintainability)](https://codeclimate.com/github/renanpelicari/jpa_x_jdbc/maintainability)
 
 This project use the following technologies and frameworks:
@@ -83,12 +82,95 @@ You can check the endpoints with the properly documentation at the address:
 
 Also I attached the [postman](https://www.getpostman.com/) collection at resource folder.
 
-## Test and coverage
+## Test coverage
 `./gradlew jacocoTestReport`
 
 The result you can check at: `build/reports/jacoco/test/html/index.html`
 
+## Comparison between JPA and JDBC
+1. Access Endpoint (can be by Swagger, Postman, CURL, etc...):
+`http://localhost:8080/api/performance/comparator/5`
+
+or by swagger:
+
+`http://localhost:8080/swagger-ui.html#!/performance45comparator45controller/compare` 
   
+2. Fill parameter quantity.
+
+This number represents the quantity of interaction for each method will perform in DB.
+
+Eg.: If you fill with 1000, will create 1000, update 1000, read 1000 and delete 1000 registers.
+
+3. Perform post and compare results. 
+
+### Result of comparison
+Response result for 1 as quantity parameter:
+```JSON
+[
+  {
+    "jpaElapsedTimeInMillis": 1,
+    "jdbcElapsedTimeInMillis": 0,
+    "method": "CREATE"
+  },
+  {
+    "jpaElapsedTimeInMillis": 2,
+    "jdbcElapsedTimeInMillis": 0,
+    "method": "READ"
+  },
+  {
+    "jpaElapsedTimeInMillis": 1,
+    "jdbcElapsedTimeInMillis": 1,
+    "method": "UPDATE"
+  },
+  {
+    "jpaElapsedTimeInMillis": 0,
+    "jdbcElapsedTimeInMillis": 1,
+    "method": "DELETE"
+  }
+]
+```
+
+Response result for 10000 as quantity parameter:
+```JSON
+[
+  {
+    "jpaElapsedTimeInMillis": 93997,
+    "jdbcElapsedTimeInMillis": 917,
+    "method": "CREATE"
+  },
+  {
+    "jpaElapsedTimeInMillis": 344,
+    "jdbcElapsedTimeInMillis": 31,
+    "method": "READ"
+  },
+  {
+    "jpaElapsedTimeInMillis": 119878,
+    "jdbcElapsedTimeInMillis": 1626,
+    "method": "UPDATE"
+  },
+  {
+    "jpaElapsedTimeInMillis": 157,
+    "jdbcElapsedTimeInMillis": 1443,
+    "method": "DELETE"
+  }
+]
+```
+
+I could observe if you run for few data, the difference is not substantial.
+
+However if you try to create or update in batch, the difference can be remarkable. And for this case JDBC is faster.
+
+To delete in batch, JPA is lightly faster. And to read JDBC leads the best.
+
+The advantage of JPA is the development time.
+
+So, if you need build and delivery ASAP you app/system, you should consider use JPA.
+
+However if you need performance, and execute a lot of batch transactions, the JDBC can be the way.
+
+Or you can use both, why not?
+
+JPA for regular CRUDs, and JDBC for transactions that you need earn performance.
 
 ## Author
 Renan Peliçari Rodrigues

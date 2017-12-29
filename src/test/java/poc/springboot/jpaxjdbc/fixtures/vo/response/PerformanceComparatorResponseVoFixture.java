@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class PerformanceComparatorResponseVoFixture {
 
     public static List<PerformanceComparatorResponseVo> getPerformanceComparatorResponseVos(final int size) {
-        return IntStream.range(1, size)
+        return IntStream.range(1, size + 1)
             .mapToObj(PerformanceComparatorResponseVoFixture::getPerformanceComparatorResponseVo)
             .collect(Collectors.toList());
     }

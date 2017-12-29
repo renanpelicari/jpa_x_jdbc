@@ -142,6 +142,17 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "COMPARISON",
+			"request": {
+				"url": "http://localhost:8080/api/performance/comparator/100",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Endpoint that compare performance between JPA and JDBC.\nYou can change the value/quantity at URL...\nThis value represents the quantity of transactions will perform in each method of CRUD.\nJust be carefull to not overload you DB :)"
+			},
+			"response": []
 		}
 	]
 }

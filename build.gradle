@@ -26,6 +26,19 @@ group = 'poc.springboot'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+// Test Structure
+sourceSets {
+    integration {
+        java.srcDir file('src/integ/java')
+        resources.srcDir file('src/integ/resources')
+    }
+}
+
+task integration(type: Test) {
+    testClassesDir = sourceSets.integration.output.classesDir
+    classpath = sourceSets.integration.runtimeClasspath
+}
+
 repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/snapshot" }
@@ -40,6 +53,12 @@ configurations {
 }
 
 dependencies {
+    // Integration Test dependencies...
+    integrationCompile sourceSets.main.output
+    integrationCompile configurations.testCompile
+    integrationCompile sourceSets.test.output
+    integrationRuntime configurations.testRuntime
+    
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-jdbc')
